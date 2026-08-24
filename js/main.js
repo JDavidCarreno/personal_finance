@@ -321,3 +321,10 @@ configurarDialogos();
 configurarRespaldo();
 procesarEnlaceCompartido();
 renderTodo(estado, textoMonto);
+
+if ('serviceWorker' in navigator) {
+  const seguro = location.protocol === 'https:' || ['localhost', '127.0.0.1'].includes(location.hostname);
+  if (seguro) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+}

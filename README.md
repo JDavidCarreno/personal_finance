@@ -42,3 +42,10 @@ Luego abre `http://localhost:8080`.
 ## Nota sobre los datos
 
 La configuración vive en el navegador en el que se usa. Para migrar a otro dispositivo usa **Exportar/Importar** o el botón **Compartir enlace**. Si borras los datos de navegación del sitio, se pierde (por eso está el respaldo). En iOS, Safari puede purgar el almacenamiento si la app no se usa durante varios días seguidos.
+
+## Modo offline y actualizaciones
+
+Un service worker (`sw.js`) guarda la app en cache: funciona sin conexión y abre al instante. Tras publicar un cambio, la versión nueva aparece al reabrir la app una segunda vez (la primera carga la copia guardada mientras actualiza en segundo plano).
+
+Si un cambio no se reflejara, sube la versión del cache en `sw.js` (`finanzas-v1` → `finanzas-v2`) y haz push; eso obliga a re-descargar todo.
+
