@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mis Finanzas</title>
+  <meta name="description" content="Distribuye tus ingresos en bolsillos según porcentajes configurables">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f7f9">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b1220">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="cabecera">
+  <h1>Mis Finanzas</h1>
+  <div class="acciones">
+    <button id="btn-compartir" class="boton-icono" title="Copiar enlace de configuración" aria-label="Copiar enlace de configuración">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
+    </button>
+    <button id="btn-exportar" class="boton-icono" title="Exportar respaldo JSON" aria-label="Exportar respaldo JSON">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    </button>
+    <button id="btn-importar" class="boton-icono" title="Importar respaldo JSON" aria-label="Importar respaldo JSON">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    </button>
+    <input type="file" id="input-importar" accept="application/json,.json" hidden>
+  </div>
+</header>
+
+<main id="contenido">
+
+  <section id="vista-calcular" class="vista activa">
+    <div class="tarjeta tarjeta-monto">
+      <label for="monto">¿Cuánto dinero entró?</label>
+      <input id="monto" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="$ 0,00">
+    </div>
+    <div id="aviso-config"></div>
+    <div id="resultados"></div>
+  </section>
+
+  <section id="vista-bolsillos" class="vista">
+    <div class="cabecera-seccion">
+      <h2>Bolsillos</h2>
+      <button id="btn-nuevo-bolsillo" class="boton-primario">+ Nuevo</button>
+    </div>
+    <p class="descripcion-seccion">Destinos finales del dinero.</p>
+    <ul id="lista-bolsillos" class="lista"></ul>
+  </section>
+
+  <section id="vista-bloques" class="vista">
+    <div class="cabecera-seccion">
+      <h2>Bloques</h2>
+      <button id="btn-nuevo-bloque" class="boton-primario">+ Nuevo</button>
+    </div>
+    <p class="descripcion-seccion">Porcentajes del ingreso que van a cada bolsillo.</p>
+    <div class="tarjeta barra-tarjeta">
+      <div class="barra"><div id="barra-relleno"></div></div>
+      <span id="texto-progreso"></span>
+    </div>
+    <ul id="lista-bloques" class="lista"></ul>
+  </section>
+
+  <section id="vista-pagos" class="vista">
+    <div class="cabecera-seccion">
+      <h2>Pagos</h2>
+      <button id="btn-nuevo-pago" class="boton-primario">+ Nuevo</button>
+    </div>
+    <p class="descripcion-seccion">Gastos fijos que se descuentan de lo que llega a Disponible.</p>
+    <ul id="lista-pagos" class="lista"></ul>
+  </section>
+
+</main>
+
+<nav class="nav-inferior">
+  <button data-vista="calcular" class="activo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="11" x2="11" y2="11"/><line x1="13" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="11" y2="15"/><line x1="13" y1="15" x2="16" y2="15"/></svg>
+    <span>Calcular</span>
+  </button>
+  <button data-vista="bolsillos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/><path d="M22 12h-6a2 2 0 0 0 0 4h6v-4z"/></svg>
+    <span>Bolsillos</span>
+  </button>
+  <button data-vista="bloques">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
+    <span>Bloques</span>
+  </button>
+  <button data-vista="pagos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+    <span>Pagos</span>
+  </button>
+</nav>
+
+<dialog id="dialog-bolsillo" class="dialogo">
+  <form id="form-bolsillo" novalidate>
+    <h2 id="titulo-dialog-bolsillo">Nuevo bolsillo</h2>
+    <label class="campo">
+      <span>Nombre</span>
+      <input type="text" id="bolsillo-nombre" autocomplete="off" maxlength="40" placeholder="Ej: Ahorro, Gastos fijos…" required>
+    </label>
+    <p id="error-bolsillo" class="error-formulario" hidden></p>
+    <input type="hidden" id="bolsillo-editando-id">
+    <div class="dialogo-acciones">
+      <button type="button" class="boton-secundario" data-cerrar-dialogo>Cancelar</button>
+      <button type="submit" class="boton-primario">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dialog-bloque" class="dialogo">
+  <form id="form-bloque" novalidate>
+    <h2 id="titulo-dialog-bloque">Nuevo bloque</h2>
+    <label class="campo">
+      <span>Nombre</span>
+      <input type="text" id="bloque-nombre" autocomplete="off" maxlength="40" placeholder="Ej: Fondo de emergencia" required>
+    </label>
+    <label class="campo">
+      <span>Porcentaje del ingreso (%)</span>
+      <input type="text" id="bloque-porcentaje" inputmode="decimal" autocomplete="off" placeholder="Ej: 20 o 16,5" required>
+    </label>
+    <label class="campo">
+      <span>Bolsillo destino</span>
+      <select id="bloque-bolsillo" required></select>
+    </label>
+    <p id="error-bloque" class="error-formulario" hidden></p>
+    <input type="hidden" id="bloque-editando-id">
+    <div class="dialogo-acciones">
+      <button type="button" class="boton-secundario" data-cerrar-dialogo>Cancelar</button>
+      <button type="submit" class="boton-primario">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dialog-pago" class="dialogo">
+  <form id="form-pago" novalidate>
+    <h2 id="titulo-dialog-pago">Nuevo pago</h2>
+    <label class="campo">
+      <span>Nombre</span>
+      <input type="text" id="pago-nombre" autocomplete="off" maxlength="40" placeholder="Ej: Netflix, Celular…" required>
+    </label>
+    <label class="campo">
+      <span>Valor (COP)</span>
+      <input type="text" id="pago-valor" inputmode="decimal" autocomplete="off" placeholder="Ej: 26900 o 26.900,00" required>
+    </label>
+    <p id="error-pago" class="error-formulario" hidden></p>
+    <input type="hidden" id="pago-editando-id">
+    <div class="dialogo-acciones">
+      <button type="button" class="boton-secundario" data-cerrar-dialogo>Cancelar</button>
+      <button type="submit" class="boton-primario">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toasts" aria-live="polite"></div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "personal-finance",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Distribución de ingresos en bolsillos según porcentajes"
+}
