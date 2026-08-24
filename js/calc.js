@@ -1,3 +1,15 @@
+export function formatearEntradaMonto(texto) {
+  if (typeof texto !== 'string') return '';
+  const limpio = texto.replace(/[^\d,]/g, '');
+  const iComa = limpio.indexOf(',');
+  let entero = iComa === -1 ? limpio : limpio.slice(0, iComa);
+  entero = entero.replace(/^0+(?=\d)/, '');
+  const conMiles = entero.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  if (iComa === -1) return conMiles;
+  const decimales = limpio.slice(iComa + 1).replace(/\D/g, '').slice(0, 2);
+  return `${conMiles},${decimales}`;
+}
+
 export function parseNumero(texto) {
   if (typeof texto !== 'string') return NaN;
   let t = texto.replace(/[^\d.,-]/g, '');

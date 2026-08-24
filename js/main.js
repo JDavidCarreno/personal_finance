@@ -8,7 +8,7 @@ import {
   nuevoId,
   DISPONIBLE_ID
 } from './storage.js';
-import { parseNumero, formatPorcentaje, sumaPorcentajes } from './calc.js';
+import { parseNumero, formatPorcentaje, sumaPorcentajes, formatearEntradaMonto } from './calc.js';
 import {
   renderTodo,
   renderResultados,
@@ -53,8 +53,27 @@ function configurarNavegacion() {
   });
 }
 
+function formatearCampoMoneda(input) {
+  input.addEventListener('input', () => {
+    const formateado = formatearEntradaMonto(input.value);
+    if (formateado !== input.value) input.value = formateado;
+  });
+  input.addEventListener('blur', () => {
+    if (!input.value.trim()) return;
+    const numero = parseNumero(input.value);
+    if (Number.isFinite(numero) && numero > 0) {
+      input.value = numero.toLocaleString('es-CO', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+  });
+}
+
 function configurarCalculadora() {
-  $('#monto').addEventListener('input', e => {
+  const monto = $('#monto');
+  formatearCampoMoneda(monto);
+  monto.addEventListener('input', e => {
     textoMonto = e.target.value;
     renderResultados(estado, textoMonto);
   });
@@ -187,6 +206,7 @@ function configurarBloques() {
 }
 
 function configurarPagos() {
+  formatearCampoMoneda($('#pago-valor'));
   $('#btn-nuevo-pago').addEventListener('click', () => abrirDialogoPago(estado));
 
   $('#lista-pagos').addEventListener('click', e => {
