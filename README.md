@@ -2,6 +2,10 @@
 
 Aplicación web estática para distribuir tus ingresos en distintos **bolsillos** según **bloques** de porcentaje configurables. Pensada para usar desde el móvil, sin backend y alojable en GitHub Pages.
 
+## Estado del proyecto
+
+En desarrollo activo.
+
 ## Funcionalidades
 
 - **Calcular**: ingresa un monto en COP (ej: `1.500.000` o `1.500.000,50`) y te muestra cuánto va a cada bolsillo, con el detalle por bloque y cuánto queda "sin asignar".
